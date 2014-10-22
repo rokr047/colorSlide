@@ -23,7 +23,7 @@ public class SwipeManager : MonoBehaviour
 
 	GameObject respawnObj;
 
-	//GameManager gManager;
+	GameplayData gPlayData;
 
 	public static Swipe swipeDirection;
 
@@ -31,7 +31,7 @@ public class SwipeManager : MonoBehaviour
 	{
 		swipeDirection = Swipe.None;
 
-		//gManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+		gPlayData = GameObject.FindGameObjectWithTag ("GameManager").GetComponent<GameplayData> ();
 	}
 
 	void Update () 
@@ -109,6 +109,7 @@ public class SwipeManager : MonoBehaviour
 		//Do not change the value of cube movespeed.
 		#else
 		//gManager.cubeMoveSpeed = swipeVector.magnitude * SPEEDMULTIPLIER;
+		//gManager.cubeMoveSpeed = SPEEDMULTIPLIER;
 		#endif
 
 		swipeVector.Normalize();
