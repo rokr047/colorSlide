@@ -12,6 +12,8 @@ public class ColorChanger : MonoBehaviour {
 
 	void Update () 
 	{
-	
+		if (gPlayData.currentGameState == GameplayData.GameState.GAME_RUNNING) {
+
+		}
 	}
 }

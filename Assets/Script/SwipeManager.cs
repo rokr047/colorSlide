@@ -15,7 +15,7 @@ public class SwipeManager : MonoBehaviour
 	public float minSwipeLength = 100.0f;
 	public float scaleValue;
 
-	float SPEEDMULTIPLIER = 10.0f;
+	//float SPEEDMULTIPLIER = 10.0f;
 
 	Vector2 swipeStartPos;
 	Vector2 swipeEndPos;
@@ -23,15 +23,11 @@ public class SwipeManager : MonoBehaviour
 
 	GameObject respawnObj;
 
-	GameplayData gPlayData;
-
 	public static Swipe swipeDirection;
 
 	void Start () 
 	{
 		swipeDirection = Swipe.None;
-
-		gPlayData = GameObject.FindGameObjectWithTag ("GameManager").GetComponent<GameplayData> ();
 	}
 
 	void Update () 

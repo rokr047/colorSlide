@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour {
 	private static bool created;
 	public GameObject ScoreText;
 
+	GameplayData gPlay;
+
 	void Awake()
 	{
 		if (!created) 
@@ -20,8 +22,22 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	void Start()
+	{
+		gPlay = GameObject.FindGameObjectWithTag ("GameManager").GetComponent<GameplayData> ();
+	}
+
 	void Update()
 	{
-		ScoreText.GetComponent<Text> ().text = this.GetComponent<GameplayData>().score.ToString();
+		if(gPlay.currentGameState == GameplayData.GameState.GAME_RUNNING)
+		{
+			ScoreText.GetComponent<Text> ().text = this.GetComponent<GameplayData>().score.ToString();
+		}
+	}
+
+	public void GameOver()
+	{
+		gPlay.currentGameState = GameplayData.GameState.GAME_OVER;
+		ScoreText.GetComponent<Text> ().text = "Game Over!";
 	}
 }

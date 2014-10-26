@@ -19,8 +19,9 @@ public class GameplayData : MonoBehaviour {
 
 	[HideInInspector] public GameState currentGameState;
 	[HideInInspector] public int score = 0;
+	[HideInInspector] public int finalScore = 0;
 
-	public void Update()
+	void Start()
 	{
 		currentGameState = GameState.GAME_RUNNING;
 	}
