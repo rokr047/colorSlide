@@ -6,6 +6,7 @@ public class GameplayData : MonoBehaviour {
 	public float colorChangeTimer;
 	public float cubeMoveSpeed;
 
+
 	public enum GameState
 	{
 		GAME_RUNNING,
@@ -20,10 +21,17 @@ public class GameplayData : MonoBehaviour {
 	[HideInInspector] public GameState currentGameState;
 	[HideInInspector] public int score = 0;
 	[HideInInspector] public int finalScore = 0;
+	[HideInInspector] public float totalGameTime = 0f;
 
 	void Start()
 	{
 		currentGameState = GameState.GAME_RUNNING;
 	}
 
+	void Update()
+	{
+		if (currentGameState == GameState.GAME_RUNNING) {
+			totalGameTime += Time.deltaTime;
+		}
+	}
 }
