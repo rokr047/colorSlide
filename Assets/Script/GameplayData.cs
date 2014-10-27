@@ -25,7 +25,7 @@ public class GameplayData : MonoBehaviour {
 
 	void Start()
 	{
-		currentGameState = GameState.GAME_RUNNING;
+		currentGameState = GameState.GAME_STARTING;
 	}
 
 	void Update()

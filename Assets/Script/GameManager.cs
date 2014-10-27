@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour {
 	void Start()
 	{
 		gPlay = GameObject.FindGameObjectWithTag ("GameManager").GetComponent<GameplayData> ();
+		GameSetup ();
 	}
 
 	void Update()
@@ -33,7 +34,7 @@ public class GameManager : MonoBehaviour {
 		if(gPlay.currentGameState == GameplayData.GameState.GAME_RUNNING)
 		{
 			ScoreText.GetComponent<Text> ().text = this.GetComponent<GameplayData>().score.ToString();
-			TimeText.GetComponent<Text>().text = this.GetComponent<GameplayData>().totalGameTime.ToString("F2");
+			TimeText.GetComponent<Text>().text = this.GetComponent<GameplayData>().totalGameTime.ToString("F1");
 		}
 	}
 
@@ -41,5 +42,18 @@ public class GameManager : MonoBehaviour {
 	{
 		gPlay.currentGameState = GameplayData.GameState.GAME_OVER;
 		ScoreText.GetComponent<Text> ().text = "GAME OVER";
+	}
+
+	public void GameSetup()
+	{
+		ScoreText.GetComponent<Text> ().text = "COLOR SLIDE";
+		gPlay.currentGameState = GameplayData.GameState.GAME_READY;
+		TimeText.SetActive (false);
+	}
+
+	public void StartGame()
+	{
+		TimeText.SetActive (true);
+		gPlay.currentGameState = GameplayData.GameState.GAME_RUNNING;
 	}
 }
