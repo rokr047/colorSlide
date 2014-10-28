@@ -36,7 +36,5 @@ public class GamePlay : MonoBehaviour {
 			Debug.LogError ("Error! There are no pushbuttons available!");
 			return;
 		}
-
-		CreateColorCube ();
 	}
 }
