@@ -20,6 +20,7 @@ public class GameplayData : MonoBehaviour {
 
 	[HideInInspector] public GameState currentGameState;
 	[HideInInspector] public int score = 0;
+	[HideInInspector] public int incorrectScore = 0;
 	[HideInInspector] public int finalScore = 0;
 	[HideInInspector] public float totalGameTime = 0f;
 

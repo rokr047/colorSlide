@@ -11,9 +11,11 @@ public class GameManager : MonoBehaviour {
 	public GameObject RestartButton;
 	public GameObject HighScoreText;
 	public GameObject CurrentScoreText;
+	public GameObject StatsButton;
 
 	GameplayData gPlayData;
 	GamePlay gPlay;
+	GameDataManager gDataManager;
 
 	void Awake()
 	{
@@ -30,8 +32,9 @@ public class GameManager : MonoBehaviour {
 
 	void Start()
 	{
-		gPlayData = GameObject.FindGameObjectWithTag ("GameManager").GetComponent<GameplayData> ();
-		gPlay = GameObject.FindGameObjectWithTag ("GameManager").GetComponent<GamePlay> ();
+		gPlayData = this.GetComponent<GameplayData> ();
+		gPlay = this.GetComponent<GamePlay> ();
+		gDataManager = this.GetComponent<GameDataManager> ();
 		GameSetup ();
 	}
 
@@ -50,8 +53,11 @@ public class GameManager : MonoBehaviour {
 		ScoreText.GetComponent<Text> ().text = "GAME OVER";
 		RestartButton.SetActive (true);
 		TimeText.SetActive (false);
+		gPlayData.incorrectScore++;
 
 		SaveScore ();
+		gDataManager.SavePlayerStats ();
+		gDataManager.DisplayPlayerData ();
 
 		#region display score
 		CurrentScoreText.SetActive (true);
@@ -62,7 +68,7 @@ public class GameManager : MonoBehaviour {
 			HighScoreText.GetComponent<Text>().text = "High : " + (PlayerPrefs.GetInt("highScore") / PlayerPrefs.GetFloat("highScoreTime")).ToString("F1");
 		}
 
-		CurrentScoreText.GetComponent<Text>().text = "Score : " + (gPlayData.score / gPlayData.totalGameTime).ToString("F1");
+		CurrentScoreText.GetComponent<Text>().text = "Score : " + (gPlayData.score / gPlayData.totalGameTime).ToString("F4");
 		#endregion
 	}
 
@@ -85,12 +91,14 @@ public class GameManager : MonoBehaviour {
 
 		HighScoreText.SetActive (false);
 		CurrentScoreText.SetActive (false);
+
+		StatsButton.SetActive (false);
 	}
 
 	public void RestartGame()
 	{
 		RestartButton.SetActive (false);
-		gPlayData.finalScore = gPlayData.score = 0;
+		gPlayData.finalScore = gPlayData.score = gPlayData.incorrectScore = 0;
 		gPlayData.totalGameTime = 0f;
 		StartGame ();
 	}
