@@ -12,6 +12,12 @@ public class GameManager : MonoBehaviour {
 	public GameObject HighScoreText;
 	public GameObject CurrentScoreText;
 	public GameObject StatsButton;
+	public GameObject TotalCorrectSlidesText;
+	public GameObject TotalGameTimeText;
+	public GameObject TotalIncorrectSlideText;
+	public GameObject PlayButton, ReplayButton;
+	public GameObject BackButton;
+	public GameObject TotalHighScoreText, TotalAverageScoreText;
 
 	GameplayData gPlayData;
 	GamePlay gPlay;
@@ -57,7 +63,9 @@ public class GameManager : MonoBehaviour {
 
 		SaveScore ();
 		gDataManager.SavePlayerStats ();
-		gDataManager.DisplayPlayerData ();
+		//gDataManager.DisplayPlayerData ();
+
+		StatsButton.SetActive (true);
 
 		#region display score
 		CurrentScoreText.SetActive (true);
@@ -80,6 +88,13 @@ public class GameManager : MonoBehaviour {
 		RestartButton.SetActive (false);
 		HighScoreText.SetActive (false);
 		CurrentScoreText.SetActive (false);
+
+		TotalCorrectSlidesText.SetActive (false);
+		TotalGameTimeText.SetActive (false);
+		TotalIncorrectSlideText.SetActive (false);
+		BackButton.SetActive (false);
+		TotalHighScoreText.SetActive(false);
+		TotalAverageScoreText.SetActive(false);
 	}
 
 	public void StartGame()
@@ -100,6 +115,7 @@ public class GameManager : MonoBehaviour {
 		RestartButton.SetActive (false);
 		gPlayData.finalScore = gPlayData.score = gPlayData.incorrectScore = 0;
 		gPlayData.totalGameTime = 0f;
+		StatsButton.SetActive (false);
 		StartGame ();
 	}
 
@@ -124,5 +140,30 @@ public class GameManager : MonoBehaviour {
 		} else {
 			PlayerPrefs.SetFloat("highScoreTime" , gPlayData.totalGameTime);
 		}
+	}
+
+	public void EnableStats(bool t)
+	{
+		TotalCorrectSlidesText.SetActive (t);
+		TotalGameTimeText.SetActive (t);
+		TotalIncorrectSlideText.SetActive (t);
+		TotalHighScoreText.SetActive(t);
+		TotalAverageScoreText.SetActive(t);
+
+		TotalCorrectSlidesText.GetComponent<Text> ().text = "Correct Slides : " + PlayerPrefs.GetInt ("totalCorrectSlides");
+		TotalGameTimeText.GetComponent<Text> ().text = "Game Time : " + PlayerPrefs.GetFloat ("totalGameTime").ToString("F2");
+		TotalIncorrectSlideText.GetComponent<Text> ().text = "Incorrect Slides : " + PlayerPrefs.GetInt ("totalIncorrectSlides");
+		TotalHighScoreText.GetComponent<Text>().text = "High Score : " + (PlayerPrefs.GetInt("highScore") / PlayerPrefs.GetFloat("highScoreTime")).ToString("F1");
+		TotalAverageScoreText.GetComponent<Text> ().text = "Average Score : " + (PlayerPrefs.GetInt ("totalCorrectSlides") / PlayerPrefs.GetFloat ("totalGameTime")).ToString ("F1");
+
+		StatsButton.SetActive (!t);
+		PlayButton.SetActive (!t);
+		BackButton.SetActive (t);
+
+		ReplayButton.SetActive (false);
+		HighScoreText.SetActive(false);
+		CurrentScoreText.SetActive (false);
+
+		ScoreText.GetComponent<Text> ().text = t ? "STATS" : "COLOR SLIDE";
 	}
 }
