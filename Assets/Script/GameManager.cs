@@ -18,10 +18,13 @@ public class GameManager : MonoBehaviour {
 	public GameObject PlayButton, ReplayButton;
 	public GameObject BackButton;
 	public GameObject TotalHighScoreText, TotalAverageScoreText;
+	public GameObject MusicButton;
 
 	GameplayData gPlayData;
 	GamePlay gPlay;
 	GameDataManager gDataManager;
+	AudioManager aManager;
+	AdManager adManager;
 
 	void Awake()
 	{
@@ -41,6 +44,8 @@ public class GameManager : MonoBehaviour {
 		gPlayData = this.GetComponent<GameplayData> ();
 		gPlay = this.GetComponent<GamePlay> ();
 		gDataManager = this.GetComponent<GameDataManager> ();
+		aManager = this.GetComponent<AudioManager> ();
+		adManager = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<AdManager> ();
 		GameSetup ();
 	}
 
@@ -66,6 +71,7 @@ public class GameManager : MonoBehaviour {
 		//gDataManager.DisplayPlayerData ();
 
 		StatsButton.SetActive (true);
+		MusicButton.SetActive (true);
 
 		#region display score
 		CurrentScoreText.SetActive (true);
@@ -73,11 +79,16 @@ public class GameManager : MonoBehaviour {
 		if(PlayerPrefs.HasKey("highScore") && PlayerPrefs.HasKey("highScoreTime"))
 		{
 			HighScoreText.SetActive (true);
-			HighScoreText.GetComponent<Text>().text = "High : " + (PlayerPrefs.GetInt("highScore") / PlayerPrefs.GetFloat("highScoreTime")).ToString("F1");
+			int highScore = PlayerPrefs.GetInt("highScore");
+			float highScoreTime = PlayerPrefs.GetFloat("highScoreTime");
+			HighScoreText.GetComponent<Text>().text = "HIGH : " + Mathf.FloorToInt(((highScore + highScoreTime) * 10 * (highScore / highScoreTime))).ToString();
 		}
 
-		CurrentScoreText.GetComponent<Text>().text = "Score : " + (gPlayData.score / gPlayData.totalGameTime).ToString("F4");
+		CurrentScoreText.GetComponent<Text>().text = "SCORE : " + Mathf.FloorToInt(((gPlayData.score + gPlayData.totalGameTime) * 10 * (gPlayData.score / gPlayData.totalGameTime))).ToString();
 		#endregion
+
+		adManager.ShowInterstitialAfter--;
+		adManager.ShowInterstitialAfterGameOver ();
 	}
 
 	public void GameSetup()
@@ -108,6 +119,7 @@ public class GameManager : MonoBehaviour {
 		CurrentScoreText.SetActive (false);
 
 		StatsButton.SetActive (false);
+		MusicButton.SetActive (false);
 	}
 
 	public void RestartGame()
@@ -165,5 +177,18 @@ public class GameManager : MonoBehaviour {
 		CurrentScoreText.SetActive (false);
 
 		ScoreText.GetComponent<Text> ().text = t ? "STATS" : "COLOR SLIDE";
+	}
+
+	public void ToggleMusicPlayback()
+	{
+		aManager.ToggleBGMusicPlayback ();
+
+		if (aManager.toggleBGMusicPlayback) {
+			MusicButton.GetComponent<Button> ().image.color = Color.green;
+			ScoreText.GetComponent<Text> ().text = "MUSIC ON";
+		} else {
+			MusicButton.GetComponent<Button> ().image.color = Color.red;
+			ScoreText.GetComponent<Text> ().text = "MUSIC OFF";
+		}
 	}
 }

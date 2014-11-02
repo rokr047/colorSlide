@@ -5,6 +5,7 @@ public class PlayerController : MonoBehaviour {
 
 	private GameplayData gPlayData;
 	private bool isMoving;
+	AudioManager aManager;
 	
 	enum Direction
 	{
@@ -22,6 +23,7 @@ public class PlayerController : MonoBehaviour {
 	void Start()
 	{
 		gPlayData = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameplayData>();
+		aManager = GameObject.FindGameObjectWithTag ("GameManager").GetComponent<AudioManager> ();
 	}
 	
 	void Update()
@@ -68,21 +70,30 @@ public class PlayerController : MonoBehaviour {
 	
 	private void GetInputFromTouch()
 	{
+		if (isMoving) 
+		{
+			return;
+		}
+
 		if(SwipeManager.swipeDirection == SwipeManager.Swipe.Down)
 		{
 			MoveColorCube(Direction.DOWN);
+			isMoving = true;
 		}
 		else if(SwipeManager.swipeDirection == SwipeManager.Swipe.Up)
 		{
 			MoveColorCube(Direction.UP);
+			isMoving = true;
 		}
 		else if(SwipeManager.swipeDirection == SwipeManager.Swipe.Left)
 		{
 			MoveColorCube(Direction.LEFT);
+			isMoving = true;
 		}
 		else if(SwipeManager.swipeDirection == SwipeManager.Swipe.Right)
 		{
 			MoveColorCube(Direction.RIGHT);
+			isMoving = true;
 		}
 		
 		SwipeManager.swipeDirection = SwipeManager.Swipe.None;
@@ -105,6 +116,11 @@ public class PlayerController : MonoBehaviour {
 		else if (d == Direction.DOWN) 
 		{
 			this.rigidbody2D.AddForce (new Vector2(0.0f, -gPlayData.cubeMoveSpeed),ForceMode2D.Impulse);
+		}
+
+		if (aManager.toggleBGMusicPlayback) {
+			aManager.audio.volume = 0.5f;
+			aManager.audio.PlayOneShot (aManager.audioSwipe);
 		}
 	}
 }

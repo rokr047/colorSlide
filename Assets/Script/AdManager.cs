@@ -6,14 +6,26 @@ using GoogleMobileAds.Api;
 
 public class AdManager : MonoBehaviour {
 
+	public int ShowInterstitialAfter;
+
 	private BannerView bannerViewAd;
 	private InterstitialAd interstitialAd;
+	private int showInterstitialAfterGameOverCount;
 
 	void Start()
 	{
 		bannerViewAd = RequestBanner();
-		//interstitialAd = RequestInterstitial();
+		interstitialAd = RequestInterstitial();
 		bannerViewAd.Show ();
+		showInterstitialAfterGameOverCount = ShowInterstitialAfter;
+	}
+
+	public void ShowInterstitialAfterGameOver()
+	{
+		if (ShowInterstitialAfter <= 0) {
+			ShowInterstitial();
+			ShowInterstitialAfter = showInterstitialAfterGameOverCount;
+		}
 	}
 
 	private BannerView RequestBanner()
@@ -154,11 +166,17 @@ public class AdManager : MonoBehaviour {
 	public void HandleInterstitialClosed(object sender, EventArgs args)
 	{
 		print("HandleInterstitialClosed event received");
+
+		interstitialAd.Destroy ();
+		interstitialAd = RequestInterstitial ();
 	}
 	
 	public void HandleInterstitialLeftApplication(object sender, EventArgs args)
 	{
 		print("HandleInterstitialLeftApplication event received");
+
+		interstitialAd.Destroy ();
+		interstitialAd = RequestInterstitial ();
 	}
 	
 	#endregion
