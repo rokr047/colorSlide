@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour {
 	public GameObject BackButton;
 	public GameObject TotalHighScoreText, TotalAverageScoreText;
 	public GameObject MusicButton;
+	public GameObject CurrentScoreLabel, HighScoreLabel;
+	public GameObject TwitterButton, FacebookButton;
 
 	GameplayData gPlayData;
 	GamePlay gPlay;
@@ -73,6 +75,12 @@ public class GameManager : MonoBehaviour {
 		StatsButton.SetActive (true);
 		MusicButton.SetActive (true);
 
+		CurrentScoreLabel.SetActive (true);
+		HighScoreLabel.SetActive (true);
+
+		TwitterButton.SetActive (true);
+		FacebookButton.SetActive (true);
+
 		#region display score
 		CurrentScoreText.SetActive (true);
 
@@ -81,10 +89,10 @@ public class GameManager : MonoBehaviour {
 			HighScoreText.SetActive (true);
 			int highScore = PlayerPrefs.GetInt("highScore");
 			float highScoreTime = PlayerPrefs.GetFloat("highScoreTime");
-			HighScoreText.GetComponent<Text>().text = "HIGH : " + Mathf.FloorToInt(((highScore + highScoreTime) * 10 * (highScore / highScoreTime))).ToString();
+			HighScoreText.GetComponent<Text>().text = "" + Mathf.FloorToInt(((highScore + highScoreTime) * 1 * (highScore / highScoreTime))).ToString();
 		}
 
-		CurrentScoreText.GetComponent<Text>().text = "SCORE : " + Mathf.FloorToInt(((gPlayData.score + gPlayData.totalGameTime) * 10 * (gPlayData.score / gPlayData.totalGameTime))).ToString();
+		CurrentScoreText.GetComponent<Text>().text = "" + Mathf.FloorToInt(((gPlayData.score + gPlayData.totalGameTime) * 1 * (gPlayData.score / gPlayData.totalGameTime))).ToString();
 		#endregion
 
 		adManager.ShowInterstitialAfter--;
@@ -93,7 +101,7 @@ public class GameManager : MonoBehaviour {
 
 	public void GameSetup()
 	{
-		ScoreText.GetComponent<Text> ().text = "COLOR SLIDE";
+		ScoreText.GetComponent<Text> ().text = "COLOR ARCADE";
 		gPlayData.currentGameState = GameplayData.GameState.GAME_READY;
 		TimeText.SetActive (false);
 		RestartButton.SetActive (false);
@@ -106,6 +114,10 @@ public class GameManager : MonoBehaviour {
 		BackButton.SetActive (false);
 		TotalHighScoreText.SetActive(false);
 		TotalAverageScoreText.SetActive(false);
+		CurrentScoreLabel.SetActive (false);
+		HighScoreLabel.SetActive (false);
+		TwitterButton.SetActive (false);
+		FacebookButton.SetActive (false);
 	}
 
 	public void StartGame()
@@ -118,8 +130,14 @@ public class GameManager : MonoBehaviour {
 		HighScoreText.SetActive (false);
 		CurrentScoreText.SetActive (false);
 
+		CurrentScoreLabel.SetActive (false);
+		HighScoreLabel.SetActive (false);
+
 		StatsButton.SetActive (false);
 		MusicButton.SetActive (false);
+
+		TwitterButton.SetActive (false);
+		FacebookButton.SetActive (false);
 	}
 
 	public void RestartGame()

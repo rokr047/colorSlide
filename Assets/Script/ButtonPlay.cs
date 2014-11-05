@@ -32,9 +32,11 @@ public class ButtonPlay : MonoBehaviour
 				gPlayData.finalScore = gPlayData.score;
 				gManager.GameOver();
 
-				#region Audio
-				aManager.audio.volume = 1.0f;
-				aManager.audio.PlayOneShot (aManager.audioGameOver);
+				#region Audio GameOver Music
+				if(aManager.toggleBGMusicPlayback) {
+					aManager.audio.volume = 1.0f;
+					aManager.audio.PlayOneShot (aManager.audioGameOver); 
+				}
 				#endregion
 			}
 		}

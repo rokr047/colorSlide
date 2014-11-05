@@ -5,7 +5,7 @@ public class PlayerController : MonoBehaviour {
 
 	private GameplayData gPlayData;
 	private bool isMoving;
-	AudioManager aManager;
+	//AudioManager aManager;
 	
 	enum Direction
 	{
@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour {
 	void Start()
 	{
 		gPlayData = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameplayData>();
-		aManager = GameObject.FindGameObjectWithTag ("GameManager").GetComponent<AudioManager> ();
+		//aManager = GameObject.FindGameObjectWithTag ("GameManager").GetComponent<AudioManager> ();
 	}
 	
 	void Update()
@@ -117,10 +117,11 @@ public class PlayerController : MonoBehaviour {
 		{
 			this.rigidbody2D.AddForce (new Vector2(0.0f, -gPlayData.cubeMoveSpeed),ForceMode2D.Impulse);
 		}
-
-		if (aManager.toggleBGMusicPlayback) {
+		/*
+		if (false && aManager.toggleBGMusicPlayback) {
 			aManager.audio.volume = 0.5f;
 			aManager.audio.PlayOneShot (aManager.audioSwipe);
 		}
+		*/
 	}
 }
