@@ -95,6 +95,10 @@ public class GameManager : MonoBehaviour {
 		CurrentScoreText.GetComponent<Text>().text = "" + Mathf.FloorToInt(((gPlayData.score + gPlayData.totalGameTime) * 1 * (gPlayData.score / gPlayData.totalGameTime))).ToString();
 		#endregion
 
+		#region GameCenter Report Score
+		GameCenterIntegration.Instance.ReportScore(Mathf.FloorToInt(((gPlayData.score + gPlayData.totalGameTime) * 1 * (gPlayData.score / gPlayData.totalGameTime))),"lb_ColorArcade_01");
+		#endregion
+
 		adManager.ShowInterstitialAfter--;
 		adManager.ShowInterstitialAfterGameOver ();
 	}
@@ -118,6 +122,8 @@ public class GameManager : MonoBehaviour {
 		HighScoreLabel.SetActive (false);
 		TwitterButton.SetActive (false);
 		FacebookButton.SetActive (false);
+
+		GameCenterIntegration.Instance.Initialize ();
 	}
 
 	public void StartGame()
@@ -208,5 +214,11 @@ public class GameManager : MonoBehaviour {
 			MusicButton.GetComponent<Button> ().image.color = Color.red;
 			ScoreText.GetComponent<Text> ().text = "MUSIC OFF";
 		}
+	}
+
+	public void ShowLeaderBoard()
+	{
+		GameCenterIntegration.Instance.LoadScore ("lb_ColorArcade_01");
+		GameCenterIntegration.Instance.ShowLeaderboardUI ();
 	}
 }
