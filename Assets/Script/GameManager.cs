@@ -68,7 +68,6 @@ public class GameManager : MonoBehaviour {
 		TimeText.SetActive (false);
 		gPlayData.incorrectScore++;
 
-		SaveScore ();
 		gDataManager.SavePlayerStats ();
 		//gDataManager.DisplayPlayerData ();
 
@@ -78,25 +77,28 @@ public class GameManager : MonoBehaviour {
 		CurrentScoreLabel.SetActive (true);
 		HighScoreLabel.SetActive (true);
 
+		/*
 		TwitterButton.SetActive (true);
 		FacebookButton.SetActive (true);
+		*/
 
 		#region display score
 		CurrentScoreText.SetActive (true);
+		HighScoreText.SetActive (true);
 
-		if(PlayerPrefs.HasKey("highScore") && PlayerPrefs.HasKey("highScoreTime"))
-		{
-			HighScoreText.SetActive (true);
-			int highScore = PlayerPrefs.GetInt("highScore");
-			float highScoreTime = PlayerPrefs.GetFloat("highScoreTime");
-			HighScoreText.GetComponent<Text>().text = "" + Mathf.FloorToInt(((highScore + highScoreTime) * 1 * (highScore / highScoreTime))).ToString();
-		}
+		int score = Mathf.FloorToInt(((gPlayData.score + gPlayData.totalGameTime) * 1 * (gPlayData.score / gPlayData.totalGameTime)));
+		CurrentScoreText.GetComponent<Text>().text = score.ToString();
 
-		CurrentScoreText.GetComponent<Text>().text = "" + Mathf.FloorToInt(((gPlayData.score + gPlayData.totalGameTime) * 1 * (gPlayData.score / gPlayData.totalGameTime))).ToString();
+		if(score > GetHighScore())
+			ScoreText.GetComponent<Text> ().text = "NEW HIGH SCORE";
+
+		SaveScore (score);
+
+		HighScoreText.GetComponent<Text>().text = GetHighScore().ToString();
 		#endregion
 
 		#region GameCenter Report Score
-		GameCenterIntegration.Instance.ReportScore(Mathf.FloorToInt(((gPlayData.score + gPlayData.totalGameTime) * 1 * (gPlayData.score / gPlayData.totalGameTime))),"lb_ColorArcade_01");
+		GameCenterIntegration.Instance.ReportScore(score ,"lb_ColorArcade_01");
 		#endregion
 
 		adManager.ShowInterstitialAfter--;
@@ -155,26 +157,25 @@ public class GameManager : MonoBehaviour {
 		StartGame ();
 	}
 
-	public void SaveScore()
+	public void SaveScore(int score)
 	{
 		if (PlayerPrefs.HasKey ("highScore")) {
 
-			if(PlayerPrefs.GetInt("highScore") < gPlayData.score)
+			if(PlayerPrefs.GetInt("highScore") < score)
 			{
-				PlayerPrefs.SetInt("highScore", gPlayData.score);
+				PlayerPrefs.SetInt("highScore", score);
 			}
 		} else {
-			PlayerPrefs.SetInt("highScore" , gPlayData.score);
+			PlayerPrefs.SetInt("highScore" , score);
 		}
+	}
 
-		if (PlayerPrefs.HasKey ("highScoreTime")) {
-			
-			if(PlayerPrefs.GetFloat("highScoreTime") < gPlayData.totalGameTime)
-			{
-				PlayerPrefs.SetFloat("highScoreTime", gPlayData.totalGameTime);
-			}
+	public int GetHighScore()
+	{
+		if (PlayerPrefs.HasKey ("highScore")) {
+			return PlayerPrefs.GetInt ("highScore");
 		} else {
-			PlayerPrefs.SetFloat("highScoreTime" , gPlayData.totalGameTime);
+			return 0;
 		}
 	}
 
@@ -221,4 +222,24 @@ public class GameManager : MonoBehaviour {
 		GameCenterIntegration.Instance.LoadScore ("lb_ColorArcade_01");
 		GameCenterIntegration.Instance.ShowLeaderboardUI ();
 	}
+
+	#region Twitter Share
+	private const string TWITTER_ADDRESS = "http://twitter.com/intent/tweet";
+	private const string TWEET_LANGUAGE = "en"; 
+
+	public void SubmitScoreToTwitter()
+	{
+		Debug.Log ("Submitting score to twitter.");
+		string textToDisplay = "Test : Just scored " + CurrentScoreText.GetComponent<Text>().text + "in #ColorAracde! Try to beat that!" + "[link to app store]";
+
+		ShareToTwitter (textToDisplay);
+	}
+	
+	private void ShareToTwitter (string textToDisplay)
+	{
+		Application.OpenURL(TWITTER_ADDRESS +
+		                    "?text=" + WWW.EscapeURL(textToDisplay) +
+		                    "&amp;lang=" + WWW.EscapeURL(TWEET_LANGUAGE));
+	}
+	#endregion
 }

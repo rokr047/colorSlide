@@ -25,18 +25,26 @@ public class SwipeManager : MonoBehaviour
 
 	public static Swipe swipeDirection;
 
+	private bool userTouched;
+
+	GameplayData gPlayData;
+
 	void Start () 
 	{
 		swipeDirection = Swipe.None;
+		userTouched = false;
+		gPlayData = this.GetComponent<GameplayData> ();
 	}
 
 	void Update () 
 	{
-		#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBPLAYER
-		DetectSwipeFromMouse();
-		#else
-		DetectSwipeFromTouch();
-		#endif
+		if (gPlayData.currentGameState == GameplayData.GameState.GAME_RUNNING) {
+			#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBPLAYER
+			DetectSwipeFromMouse ();
+			#else
+			DetectSwipeFromTouch();
+			#endif
+		}
 	}
 
 	void DetectSwipeFromTouch()
@@ -45,16 +53,22 @@ public class SwipeManager : MonoBehaviour
 		{
 			Touch t = Input.GetTouch (0);
 
-			if (t.phase == TouchPhase.Began) 
+			if (t.phase == TouchPhase.Began && !userTouched) 
 			{
+				Debug.Log("Scaling forward.");
+
+				userTouched = true;
 				swipeStartPos = new Vector2 (t.position.x, t.position.y);
 
 				if((respawnObj = GameObject.FindGameObjectWithTag("Respawn")) != null)
 					respawnObj.transform.localScale = new Vector3(GameObject.FindGameObjectWithTag("Respawn").transform.localScale.x * scaleValue, GameObject.FindGameObjectWithTag("Respawn").transform.localScale.y * scaleValue, GameObject.FindGameObjectWithTag("Respawn").transform.localScale.z * scaleValue);
 			}
 
-			if(t.phase == TouchPhase.Ended)
+			if(t.phase == TouchPhase.Ended && userTouched)
 			{
+				Debug.Log("Scaling backward.");
+
+				userTouched = false;
 				swipeEndPos = new Vector2(t.position.x,t.position.y);
 
 				if((respawnObj = GameObject.FindGameObjectWithTag("Respawn")) != null)
