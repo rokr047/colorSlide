@@ -16,7 +16,9 @@ public class AdManager : MonoBehaviour {
 	{
 		bannerViewAd = RequestBanner();
 		interstitialAd = RequestInterstitial();
+
 		bannerViewAd.Show ();
+
 		showInterstitialAfterGameOverCount = ShowInterstitialAfter;
 	}
 

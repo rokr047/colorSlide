@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviour {
 		CurrentScoreText.GetComponent<Text>().text = score.ToString();
 
 		if(score > GetHighScore())
-			ScoreText.GetComponent<Text> ().text = "NEW HIGH SCORE";
+			ScoreText.GetComponent<Text> ().text = "HIGH SCORE";
 
 		SaveScore (score);
 
@@ -98,7 +98,11 @@ public class GameManager : MonoBehaviour {
 		#endregion
 
 		#region GameCenter Report Score
+		#if UNITY_IPHONE
 		GameCenterIntegration.Instance.ReportScore(score ,"lb_ColorArcade_01");
+		#elif UNITY_ANDROID
+		//Add android game service leaderboard integration.
+		#endif
 		#endregion
 
 		adManager.ShowInterstitialAfter--;
