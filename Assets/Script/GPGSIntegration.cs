@@ -1,35 +1,40 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using GooglePlayGames;
 using UnityEngine.SocialPlatforms;
-using UnityEngine.SocialPlatforms.GameCenter;
 
 /* This will be singleton class for accessing iOS Game Center
- * leader board and achievements 
- * https://gist.github.com/NiklasBorglund/c33af4ab377ea289283f
+ * leader board and achievements.
  */
-public class GameCenterIntegration {
+public class GPGSIntegration {
 
 	#region Singleton variables and functions
-	private static GameCenterIntegration instance;
+	private static GPGSIntegration instance;
 	
-	public static GameCenterIntegration Instance
+	public static GPGSIntegration Instance
 	{
 		get
 		{
 			if(instance == null)
 			{
-				instance = new GameCenterIntegration();
+				instance = new GPGSIntegration();
 			}
 			return instance;
 		}
 	}
 	#endregion
 
-	public GameCenterIntegration (){}
+	public GPGSIntegration (){}
 
 	public void Initialize()
 	{
+		// recommended for debugging:
+		PlayGamesPlatform.DebugLogEnabled = true;
+		
+		// Activate the Google Play Games platform
+		PlayGamesPlatform.Activate();
+
 		if(!IsUserAuthenticated())
 		{
 			Social.localUser.Authenticate (ProcessAuthentication);
@@ -49,6 +54,37 @@ public class GameCenterIntegration {
 		}
 	}
 
+	void ProcessAuthentication(bool success)
+	{
+		if(success)
+		{
+			Debug.Log ("Authenticated, checking achievements");
+			
+		}
+		else
+		{
+			Debug.Log ("Failed to authenticate");
+		}
+	}
+
+	void UnlockAchievement(string achievementID)
+	{
+		if(!IsUserAuthenticated())
+		{
+			Debug.Log("User not authenticated!");
+			return;
+		}
+
+		Social.ReportProgress(achievementID, 100.0f, (bool success) => {
+			if(success)
+			{
+				Debug.Log("Reporting Achievement progress success!");
+			} else {
+				Debug.Log("Reporting Achievement progress failed!");
+			}
+		});
+	}
+
 	public void ShowLeaderboardUI()
 	{
 		if(IsUserAuthenticated())
@@ -56,7 +92,7 @@ public class GameCenterIntegration {
 			Social.ShowLeaderboardUI();
 		}
 	}
-
+	
 	public void ReportScore(long score, string leaderBoardID)
 	{
 		if (IsUserAuthenticated())
@@ -68,21 +104,11 @@ public class GameCenterIntegration {
 		}
 	}
 
-	void ProcessAuthentication(bool success)
-	{
-		if(success)
-		{
-			Debug.Log ("Authenticated, checking achievements");
-
-		}
-		else
-		{
-			Debug.Log ("Failed to authenticate");
-		}
-	}
-
 	public void LoadScore(string LeaderboardID)
 	{
+		if (!IsUserAuthenticated ())
+				return;
+
 		Social.LoadScores(LeaderboardID, scores => {
 			if (scores.Length > 0) {
 				Debug.Log ("Got " + scores.Length + " scores");

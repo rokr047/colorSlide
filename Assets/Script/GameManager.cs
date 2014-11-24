@@ -99,9 +99,13 @@ public class GameManager : MonoBehaviour {
 
 		#region GameCenter Report Score
 		#if UNITY_IPHONE
+		//Add iOS Gamecenter service leaderboard integration.
 		GameCenterIntegration.Instance.ReportScore(score ,"lb_ColorArcade_01");
 		#elif UNITY_ANDROID
-		//Add android game service leaderboard integration.
+		//Add Android Game Service leaderboard integration.
+		GPGSIntegration.Instance.ReportScore(score,"CgkI47Ot-4EQEAIQBg");
+		#else
+		Debug.LogError("GameOver() :: Leaderboard Not Supported in Current Platform!!");
 		#endif
 		#endregion
 
@@ -129,7 +133,15 @@ public class GameManager : MonoBehaviour {
 		TwitterButton.SetActive (false);
 		FacebookButton.SetActive (false);
 
-		GameCenterIntegration.Instance.Initialize ();
+		#if UNITY_IPHONE
+			//iOS Gamecenter Initialize.
+			GameCenterIntegration.Instance.Initialize ();
+		#elif UNITY_ANDROID
+			//Google Play Games Initialize.
+			GPGSIntegration.Instance.Initialize();
+		#else
+		Debug.LogError("GameSetup() :: Unsupported Platform!");
+		#endif
 	}
 
 	public void StartGame()
@@ -223,8 +235,15 @@ public class GameManager : MonoBehaviour {
 
 	public void ShowLeaderBoard()
 	{
-		GameCenterIntegration.Instance.LoadScore ("lb_ColorArcade_01");
-		GameCenterIntegration.Instance.ShowLeaderboardUI ();
+		#if UNITY_IPHONE
+			GameCenterIntegration.Instance.LoadScore ("lb_ColorArcade_01");
+			GameCenterIntegration.Instance.ShowLeaderboardUI ();
+		#elif UNITY_ANDROID
+			GPGSIntegration.Instance.LoadScore("CgkI47Ot-4EQEAIQBg");
+			GPGSIntegration.Instance.ShowLeaderboardUI();
+		#else
+		Debug.LogError("ShowLeaderBoard() :: Unsupported Platform");
+		#endif
 	}
 
 	#region Twitter Share
