@@ -58,11 +58,13 @@ public class GamePlay : MonoBehaviour {
 			yield return new WaitForSeconds (Random.Range(5,20));
 			
 			Color tempColor = goPushButton[0].GetComponent<SpriteRenderer>().color;
-			
-			goPushButton[0].GetComponent<SpriteRenderer>().color = goPushButton[1].GetComponent<SpriteRenderer>().color;
-			goPushButton[1].GetComponent<SpriteRenderer>().color = goPushButton[2].GetComponent<SpriteRenderer>().color;
-			goPushButton[2].GetComponent<SpriteRenderer>().color = goPushButton[3].GetComponent<SpriteRenderer>().color;
-			goPushButton[3].GetComponent<SpriteRenderer>().color = tempColor;
+			if(GameObject.FindGameObjectWithTag("Respawn") != null && GameObject.FindGameObjectWithTag("Respawn").rigidbody2D.velocity.sqrMagnitude <= 0.0f)
+			{
+				goPushButton[0].GetComponent<SpriteRenderer>().color = goPushButton[1].GetComponent<SpriteRenderer>().color;
+				goPushButton[1].GetComponent<SpriteRenderer>().color = goPushButton[2].GetComponent<SpriteRenderer>().color;
+				goPushButton[2].GetComponent<SpriteRenderer>().color = goPushButton[3].GetComponent<SpriteRenderer>().color;
+				goPushButton[3].GetComponent<SpriteRenderer>().color = tempColor;
+			}
 		}
 	}
 }

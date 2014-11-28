@@ -55,8 +55,10 @@ public class GameManager : MonoBehaviour {
 	{
 		if(gPlayData.currentGameState == GameplayData.GameState.GAME_RUNNING)
 		{
-			ScoreText.GetComponent<Text> ().text = this.GetComponent<GameplayData>().score.ToString();
-			TimeText.GetComponent<Text>().text = this.GetComponent<GameplayData>().totalGameTime.ToString("F1");
+			ScoreText.GetComponent<Text> ().text = ""; //this.GetComponent<GameplayData>().score.ToString();
+			//TimeText.GetComponent<Text>().text = this.GetComponent<GameplayData>().totalGameTime.ToString("F1");
+
+			TimeText.GetComponent<Text>().text = Mathf.FloorToInt(((this.GetComponent<GameplayData>().score) * 1 * (this.GetComponent<GameplayData>().score / this.GetComponent<GameplayData>().totalGameTime))).ToString();
 		}
 	}
 
@@ -86,7 +88,7 @@ public class GameManager : MonoBehaviour {
 		CurrentScoreText.SetActive (true);
 		HighScoreText.SetActive (true);
 
-		int score = Mathf.FloorToInt(((gPlayData.score + gPlayData.totalGameTime) * 1 * (gPlayData.score / gPlayData.totalGameTime)));
+		int score = Mathf.FloorToInt(((gPlayData.score) * 1 * (gPlayData.score / gPlayData.totalGameTime)));
 		CurrentScoreText.GetComponent<Text>().text = score.ToString();
 
 		if(score > GetHighScore())
@@ -235,6 +237,7 @@ public class GameManager : MonoBehaviour {
 
 	public void ShowLeaderBoard()
 	{
+		ScoreText.GetComponent<Text> ().text = "LEADERBOARD";
 		#if UNITY_IPHONE
 			GameCenterIntegration.Instance.LoadScore ("lb_ColorArcade_01");
 			GameCenterIntegration.Instance.ShowLeaderboardUI ();
