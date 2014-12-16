@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviour {
 	{
 		if(gPlayData.currentGameState == GameplayData.GameState.GAME_RUNNING)
 		{
-			ScoreText.GetComponent<Text> ().text = ""; //this.GetComponent<GameplayData>().score.ToString();
+			ScoreText.GetComponent<Text> ().text = "COLOR ARCADE"; //this.GetComponent<GameplayData>().score.ToString();
 			//TimeText.GetComponent<Text>().text = this.GetComponent<GameplayData>().totalGameTime.ToString("F1");
 
 			TimeText.GetComponent<Text>().text = Mathf.FloorToInt(((this.GetComponent<GameplayData>().score) * 1 * (this.GetComponent<GameplayData>().score / this.GetComponent<GameplayData>().totalGameTime))).ToString();
